@@ -1,4 +1,4 @@
-import http.client,json,threading,unittest
+import contextlib,http.client,io,json,pathlib,runpy,threading,unittest
 from urllib.parse import urlencode
 from unittest.mock import patch
 import loopback_form as form
@@ -65,5 +65,32 @@ class HTTPTests(unittest.TestCase):
     def test_transfer_encoding_and_oversize_rejected(self):
         self.assertEqual(self.submit(**{'Transfer-Encoding':'chunked'})[0],400)
         self.assertEqual(self.call('/submit','POST','x'*(form.MAX_BODY+1),{'Origin':self.server.origin,'Content-Type':'application/x-www-form-urlencoded'})[0],400)
+
+class ScriptTests(unittest.TestCase):
+    def test_script_starts_once_and_exits_after_submission_or_expiry(self):
+        for reason in ('submission','expiry'):
+            with self.subTest(reason=reason):
+                events=[];now=[0];output=io.StringIO()
+                class FakeServer:
+                    def __init__(self,address,handler):
+                        self.server_port=12345;events.append('start')
+                    def __enter__(self):return self
+                    def __exit__(self,*args):events.append('close')
+                    def handle_request(self):
+                        events.append('request')
+                        if reason=='expiry':now[0]+=form.TTL
+                        else:
+                            fields={k:[v] for k,v in {**form.DUMMY,'csrf':self.gate.csrf,'consent':'READ OPPO ONCE'}.items()}
+                            status,result=self.gate.submit(fields)
+                            self_test.assertEqual((status,result['mode']),(200,'dry-run'))
+                self_test=self
+                with (patch('http.server.HTTPServer',FakeServer),
+                      patch('time.monotonic',lambda:now[0]),
+                      patch('sys.argv',['loopback_form.py']),
+                      patch('socket.socket',side_effect=AssertionError('network_forbidden')),
+                      contextlib.redirect_stdout(output)):
+                    runpy.run_path(str(pathlib.Path(form.__file__)),run_name='__main__')
+                self.assertEqual(events,['start','request','close'])
+                self.assertEqual(len(output.getvalue().splitlines()),1)
 
 if __name__=='__main__':unittest.main()

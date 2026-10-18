@@ -121,14 +121,3 @@ def main():
         while server.gate.active():server.handle_request()
 
 if __name__=='__main__':main()
-
-
-def main():
-    import sys
-    if sys.argv[1:]:
-        print('{"outcome":"invalid_arguments","mode":"dry-run"}');return
-    with Server() as server:
-        print('Dummy-only form: '+server.origin+'/',flush=True)
-        while server.gate.active():server.handle_request()
-
-if __name__=='__main__':main()
