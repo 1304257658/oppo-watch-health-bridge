@@ -1,0 +1,334 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Candidate business-cache RPC result; NOT company HTTP bootstrap contract",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "snapshot": {
+          "type": "object",
+          "properties": {
+            "schema": {
+              "const": "oppo.business-cache-snapshot/1"
+            },
+            "app": {
+              "type": "object",
+              "properties": {
+                "package_name": {
+                  "const": "com.heytap.health"
+                },
+                "version_code": {
+                  "const": "6094200"
+                },
+                "version_name": {
+                  "const": "6.9.42_4b2ba32_261012"
+                },
+                "app_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "branch": {
+                  "enum": [
+                    "system",
+                    "open"
+                  ]
+                }
+              },
+              "required": [
+                "package_name",
+                "version_code",
+                "version_name",
+                "app_id",
+                "branch"
+              ],
+              "additionalProperties": false
+            },
+            "credentials": {
+              "type": "object",
+              "properties": {
+                "access_token": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "refresh_token": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "access_exp_ms": {
+                  "type": "string",
+                  "pattern": "^[1-9][0-9]*$",
+                  "maxLength": 19,
+                  "description": "Unsigned decimal representation of nonnegative signed Java Long, <=9223372036854775807. Agent additionally enforces upper bound. No unit inference."
+                },
+                "refresh_exp_ms": {
+                  "type": "string",
+                  "pattern": "^[1-9][0-9]*$",
+                  "maxLength": 19,
+                  "description": "Unsigned decimal representation of nonnegative signed Java Long, <=9223372036854775807. Agent additionally enforces upper bound. No unit inference."
+                },
+                "access_advance_s": {
+                  "type": "string",
+                  "pattern": "^(0|[1-9][0-9]*)$",
+                  "maxLength": 19,
+                  "description": "Unsigned decimal representation of nonnegative signed Java Long, <=9223372036854775807. Agent additionally enforces upper bound. No unit inference."
+                },
+                "refresh_advance_s": {
+                  "type": "string",
+                  "pattern": "^(0|[1-9][0-9]*)$",
+                  "maxLength": 19,
+                  "description": "Unsigned decimal representation of nonnegative signed Java Long, <=9223372036854775807. Agent additionally enforces upper bound. No unit inference."
+                }
+              },
+              "required": [
+                "access_token",
+                "refresh_token",
+                "access_exp_ms",
+                "refresh_exp_ms",
+                "access_advance_s",
+                "refresh_advance_s"
+              ],
+              "additionalProperties": false
+            },
+            "original_binding": {
+              "type": "object",
+              "properties": {
+                "pkg_sign": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "device_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "host": {
+                  "type": "string",
+                  "description": "Original cached host; empty is observed in openSDK creation. Never resolve or replace here."
+                }
+              },
+              "required": [
+                "pkg_sign",
+                "device_id",
+                "host"
+              ],
+              "additionalProperties": false
+            },
+            "clock_sample": {
+              "type": "object",
+              "properties": {
+                "before": {
+                  "type": "object",
+                  "properties": {
+                    "wall_ms": {
+                      "type": "string",
+                      "pattern": "^[1-9][0-9]*$",
+                      "maxLength": 19,
+                      "description": "Unsigned decimal representation of nonnegative signed Java Long, <=9223372036854775807. Agent additionally enforces upper bound. No unit inference."
+                    },
+                    "elapsed_ms": {
+                      "type": "string",
+                      "pattern": "^(0|[1-9][0-9]*)$",
+                      "maxLength": 19,
+                      "description": "Unsigned decimal representation of nonnegative signed Java Long, <=9223372036854775807. Agent additionally enforces upper bound. No unit inference."
+                    }
+                  },
+                  "required": [
+                    "wall_ms",
+                    "elapsed_ms"
+                  ],
+                  "additionalProperties": false
+                },
+                "after": {
+                  "type": "object",
+                  "properties": {
+                    "wall_ms": {
+                      "type": "string",
+                      "pattern": "^[1-9][0-9]*$",
+                      "maxLength": 19,
+                      "description": "Unsigned decimal representation of nonnegative signed Java Long, <=9223372036854775807. Agent additionally enforces upper bound. No unit inference."
+                    },
+                    "elapsed_ms": {
+                      "type": "string",
+                      "pattern": "^(0|[1-9][0-9]*)$",
+                      "maxLength": 19,
+                      "description": "Unsigned decimal representation of nonnegative signed Java Long, <=9223372036854775807. Agent additionally enforces upper bound. No unit inference."
+                    }
+                  },
+                  "required": [
+                    "wall_ms",
+                    "elapsed_ms"
+                  ],
+                  "additionalProperties": false
+                },
+                "semantics": {
+                  "const": "wall-and-boot-elapsed-sampled-sequentially-not-server-offset"
+                }
+              },
+              "required": [
+                "before",
+                "after",
+                "semantics"
+              ],
+              "additionalProperties": false
+            },
+            "provenance": {
+              "type": "object",
+              "properties": {
+                "cache_class": {
+                  "enum": [
+                    "com.oplus.accountsdk.service.common.cache.AcIdLocalCacheUtils",
+                    "com.oplus.accountsdk.open.util.cache.AcOpenLocalCacheUtils"
+                  ]
+                },
+                "cache_method": {
+                  "const": "loadAuthResponseCache(Context,String)"
+                },
+                "response_class": {
+                  "const": "com.platform.usercenter.account.ams.ipc.AcAuthResponse"
+                },
+                "app_id_source": {
+                  "const": "com.heytap.health.account.sdk.AccountSdk.appId"
+                },
+                "cache_key": {
+                  "const": "app_id"
+                },
+                "apk_hash_verified_on_device": {
+                  "const": false
+                },
+                "id_token_excluded": {
+                  "const": true
+                }
+              },
+              "required": [
+                "cache_class",
+                "cache_method",
+                "response_class",
+                "app_id_source",
+                "cache_key",
+                "apk_hash_verified_on_device",
+                "id_token_excluded"
+              ],
+              "additionalProperties": false
+            },
+            "readiness": {
+              "type": "object",
+              "properties": {
+                "http_ready": {
+                  "const": false
+                },
+                "missing": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "uniqueItems": true,
+                  "minItems": 11
+                }
+              },
+              "required": [
+                "http_ready",
+                "missing"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "schema",
+            "app",
+            "credentials",
+            "original_binding",
+            "clock_sample",
+            "provenance",
+            "readiness"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "ok",
+        "snapshot"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "const": false
+        },
+        "error": {
+          "enum": [
+            "RUNTIME_DISABLED",
+            "BUSY_OR_CONSUMED",
+            "JAVA_UNAVAILABLE",
+            "CLASS_NOT_LOADED",
+            "LOADER_MISMATCH",
+            "CONTEXT_MISSING",
+            "VERSION_MISMATCH",
+            "NOT_INITIALIZED",
+            "BRANCH_MISSING",
+            "APP_ID_MISSING",
+            "CACHE_INSTANCE_MISSING",
+            "CACHE_MISSING",
+            "RESPONSE_TYPE_MISMATCH",
+            "FIELD_MISSING",
+            "INVALID_INTEGER",
+            "STATE_CHANGED",
+            "CACHE_CHANGED",
+            "CLOCK_INVALID",
+            "MAIN_THREAD",
+            "RUNTIME_INCOMPATIBLE",
+            "DEFAULT_LOADER_UNAVAILABLE",
+            "CONTEXT_LOADER_UNAVAILABLE",
+            "LOADER_UNRELATED",
+            "IDENTITY_API_UNAVAILABLE",
+            "LOADER_CHAIN_INVALID",
+            "CLASS_AMBIGUOUS",
+            "CLASS_IDENTITY_MISMATCH",
+            "CLASS_LOADER_OUTSIDE_CONTEXT",
+            "ENUMERATION_INCOMPLETE",
+            "FACTORY_LOADER_MISMATCH",
+            "CACHE_SIGNATURE_MISMATCH"
+          ]
+        },
+        "diagnostic": {
+          "type": "object",
+          "properties": {
+            "stage": {
+              "enum": [
+                "bootstrap",
+                "loaded_classes",
+                "holder",
+                "context",
+                "version",
+                "sdk",
+                "state",
+                "cache_class",
+                "response_class",
+                "cache_signature",
+                "cache_read",
+                "response"
+              ]
+            },
+            "cache_read_started": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "stage",
+            "cache_read_started"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "ok",
+        "error"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}
